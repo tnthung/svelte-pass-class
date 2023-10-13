@@ -72,7 +72,7 @@ export const markup: MarkupPreprocessor = ({ content, filename }) => {
   // extract the script block from the content
   let { block: script, content: __c1} =
     extractBlock(content, "script");
-  script  = script.trim() || `<script></script>`;
+  script  = script.trim() || `<script>\n</script>`;
   content = __c1.trim();
 
   function appendScript(code: string) {
@@ -87,12 +87,8 @@ export const markup: MarkupPreprocessor = ({ content, filename }) => {
   // extract the style block from the content
   let { block: style, content: __c2 } =
     extractBlock(content, "style");
-  style   = style.trim() || `<style></style>`;
+  style   = style.trim() || `<style>\n</style>`;
   content = __c2.trim();
-
-
-  // add the class swap table field
-  appendScript(classSwapTableField);
 
 
   // get all imported components
@@ -108,6 +104,11 @@ export const markup: MarkupPreprocessor = ({ content, filename }) => {
       exported.push(name);
       return `.${name}`;
     });
+
+
+  // add the class swap table field if has exported classes
+  if (exported.length > 0)
+    appendScript(classSwapTableField);
 
 
   // process the declared classes
