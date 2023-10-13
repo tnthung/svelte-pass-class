@@ -1,9 +1,6 @@
-import SHA256 from "crypto-js/sha256";
+import { randomUUID, createHash }  from "crypto";
 
 import type { MarkupPreprocessor } from "svelte/compiler";
-
-
-const { randomUUID } = globalThis.crypto;
 
 
 const ALLOW_COMPLEX_SELECTOR = false;
@@ -23,7 +20,9 @@ const reg_openOrSelfHTMLTag = /<([a-zA-Z_][a-zA-Z0-9_-]+)\s*([^>]*)>/g;
 
 // Function to get the hash of a component
 function getHash(...frag: string[]) {
-  return `spc-${SHA256(frag.join("")).toString().slice(0, 10)}`;
+  const hash = createHash("sha256");
+  for (const f of frag) hash.update(f);
+  return `spc-${hash.digest("hex").toString().slice(0, 10)}`;
 }
 
 
@@ -66,7 +65,7 @@ function isSelectorEquivalent(s1: string, s2: string) {
 }
 
 
-const markup: MarkupPreprocessor = ({ content, filename }) => {
+export const markup: MarkupPreprocessor = ({ content, filename }) => {
   // compute the hash of the component
   const selfHash = getHash(content, filename ?? "");
 
@@ -238,6 +237,3 @@ const markup: MarkupPreprocessor = ({ content, filename }) => {
 
   return { code };
 };
-
-
-export default { markup };
