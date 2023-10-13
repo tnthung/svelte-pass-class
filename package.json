@@ -1,6 +1,6 @@
 {
 	"name": "svelte-pass-class",
-	"version": "0.0.2",
+	"version": "0.0.4",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -48,5 +48,6 @@
 		"jsdom": "^22.1.0",
 		"rollup-plugin-svelte": "^7.1.6",
 		"svelte-preprocess": "^5.0.4"
-	}
+	},
+  "main": "./dist/index.js"
 }
