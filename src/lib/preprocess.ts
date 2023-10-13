@@ -1,24 +1,11 @@
-import _jquery from "jquery";
-
-import { JSDOM      } from "jsdom";
 import { randomUUID } from "crypto";
 import { createHash } from "crypto";
-import { preprocess, compile } from "svelte/compiler";
 
 import type { MarkupPreprocessor } from "svelte/compiler";
 
 
 const ALLOW_COMPLEX_SELECTOR = false;
 
-
-const { window   } =  new JSDOM();
-const { document } = (new JSDOM()).window;
-const $j = _jquery(window) as unknown as typeof _jquery;
-global.document = document;
-
-
-const parentHash          = "__spc_parent_hash__";
-const parentHashField     = `export let ${parentHash} = \"\";\n`;
 
 const classSwapTable      = "__spc_class_swap_table__";
 const classSwapTableField = `export let ${classSwapTable} = {};\n`;
@@ -237,9 +224,6 @@ const markup: MarkupPreprocessor = ({ content, filename }) => {
     });
 
 
-  // replace the declared classes with hashed classes
-
-
   // add the hashed class to global
   for (const [k, v] of Object.entries(passedMap))
     style = style.replace(
@@ -247,64 +231,13 @@ const markup: MarkupPreprocessor = ({ content, filename }) => {
       `:global(.${v}), .${k}`);
 
 
-
-
-
-
   const code = `
-<!-------------------------->
-${script}\n
-<!-------------------------->
-${content}\n
-<!-------------------------->
-${style}`;
-
-//   console.log(code);
-//   console.log("----------------------------");
+    ${script}\n
+    ${content}\n
+    ${style}`;
 
   return { code };
 };
-
-
-if (false) (async () => {
-  const code = `
-  <script>
-    import Foo from "./foo.svelte";
-    import Bar from "./bar.svelte";
-    export let name = "world";
-  </script>
-
-  <div class="c d" class:a={true} class:f={true}>
-    {name}
-    <span>asdf</span>
-  </div>
-  <Foo class:c="b"/>
-  <Foo class:c="b" class:a="abc"/>
-  <Bar class:b/>
-  <Bar class:b class:a="abc"/>
-  <Bar class:a/>
-
-  <style>
-    :export(.a) { color: red; }
-    :export(.d) { color: red; }
-    :let(Foo).a { color: blue; }
-    .abc { color: green; }
-    .b { color: green; }
-    .c { color: green; }
-  </style>
-  `;
-
-
-  const { js, css } = compile(
-    (await
-      preprocess(code, { markup })
-    ).code
-  );
-
-  console.log(js.code);
-  console.log("----------------------------");
-  console.log(css.code);
-})();
 
 
 export default { markup };
