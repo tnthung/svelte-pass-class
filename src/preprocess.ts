@@ -15,7 +15,7 @@ const reg_exportedClass     = /:export\(\.((?:[a-zA-Z0-9_-]|\\[^a-zA-Z0-9_ -])+)
 const reg_declaredClass     = /:let\((.*)\)\.((?:[a-zA-Z0-9_-]|\\[^ a-zA-Z0-9_-])+)/g;
 const reg_classAttribute    = /class:((?:[a-zA-Z0-9_-]|\\[^ a-zA-Z0-9_-])+)(?:\s*=\s*"((?:[a-zA-Z0-9_-]|\\[^ a-zA-Z0-9_-])+?)")?/g
 const reg_classAttributeEle = /class:((?:[a-zA-Z0-9_-]|\\[^ a-zA-Z0-9_-])+)(?:\s*=\s*\{(.*?)\})?/g
-const reg_openOrSelfHTMLTag = /<(.+)\s*([^>]*)>/g;
+const reg_openOrSelfHTMLTag = /<([^ />]+)\s*(.*?)>/g;
 
 
 // Function to get the hash of a component
