@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { createHash } from "crypto";
+// FIXME: crypto is not available in browser, need to be polyfilled
 
 import type { MarkupPreprocessor } from "svelte/compiler";
 
