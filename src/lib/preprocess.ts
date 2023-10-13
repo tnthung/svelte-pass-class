@@ -1,8 +1,9 @@
-import { randomUUID } from "crypto";
-import { createHash } from "crypto";
-// FIXME: crypto is not available in browser, need to be polyfilled
+import SHA256 from "crypto-js/sha256";
 
 import type { MarkupPreprocessor } from "svelte/compiler";
+
+
+const { randomUUID } = globalThis.crypto;
 
 
 const ALLOW_COMPLEX_SELECTOR = false;
@@ -22,9 +23,7 @@ const reg_openOrSelfHTMLTag = /<([a-zA-Z_][a-zA-Z0-9_-]+)\s*([^>]*)>/g;
 
 // Function to get the hash of a component
 function getHash(...frag: string[]) {
-  const hashing = createHash("sha256");
-  for (const f of frag) hashing.update(f);
-  return `spc-${hashing.digest("hex").slice(0, 10)}`;
+  return `spc-${SHA256(frag.join("")).toString().slice(0, 10)}`;
 }
 
 
