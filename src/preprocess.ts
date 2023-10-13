@@ -170,7 +170,18 @@ export const markup: MarkupPreprocessor = ({ content, filename }) => {
               .filter(([k]) => !useDeclare.includes(k)))
           ), ...swapTable };
 
-          attrs = `${classSwapTable}={${JSON.stringify(swapTable)}} ${attrs}`;
+          let tableString = "";
+
+          for (const k in swapTable) {
+            if (!exported.includes(k)) {
+              tableString += `"${k}": "${swapTable[k]}",`;
+              continue;
+            }
+
+            tableString += `"${k}": ${classSwapTable}["${k}"] ?? "${swapTable[k]}",`
+          }
+
+          attrs = `${classSwapTable}={{${tableString}}} ${attrs}`;
         }
       }
 
